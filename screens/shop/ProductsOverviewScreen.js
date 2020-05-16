@@ -12,4 +12,8 @@ const ProductOverviewScreen = (props) => {
   );
 };
 
+ProductOverviewScreen.navigationOptions = {
+  headerTitle: 'All Products',
+};
+
 export default ProductOverviewScreen;
