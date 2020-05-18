@@ -30,7 +30,7 @@ const PRODUCTS = [
     'u3',
     'Das Kapital - Limited Edition',
     'https://images.pexels.com/photos/46274/pexels-photo-46274.jpeg?cs=srgb&dl=blur-blurred-book-pages-46274.jpg&fm=jpg',
-    "What the content is? Why would that matter? It's a limited edition!",
+    'Smash capitalism with this limited-edition book at a special price!',
     15.99
   ),
   new Product(
