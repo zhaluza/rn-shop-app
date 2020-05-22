@@ -5,7 +5,6 @@ import CartItem from './CartItem';
 import Colors from '../../constants/Colors';
 
 const OrderItem = ({ total, date, items }) => {
-  console.log(items);
   const [showDetails, setShowDetails] = useState(false);
   return (
     <View style={styles.orderItem}>
