@@ -14,7 +14,7 @@ export default (state = initialState, action) => {
       const addedProduct = action.product;
       const productId = addedProduct.id;
       const productPrice = addedProduct.price;
-      const productName = addedProduct.title;
+      const productName = addedProduct.name;
 
       let cartItem;
 
