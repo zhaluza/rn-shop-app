@@ -6,6 +6,7 @@ import {
   TextInput,
   StyleSheet,
   Platform,
+  Alert,
 } from 'react-native';
 import Colors from '../../constants/Colors';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
@@ -22,6 +23,7 @@ const EditProductScreen = (props) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState(editedProduct ? editedProduct.name : '');
+  const [nameIsValid, setNameIsValid] = useState(false);
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ''
   );
@@ -31,6 +33,14 @@ const EditProductScreen = (props) => {
   );
 
   const submitHandler = useCallback(() => {
+    // cancel submit if the product name isn't valid
+    if (!nameIsValid) {
+      Alert.alert('Invalid input', 'Please enter a name for your product', [
+        { text: 'OK' },
+      ]);
+      return;
+    }
+
     // if we're editing an existing product
     if (editedProduct) {
       dispatch(
@@ -43,11 +53,20 @@ const EditProductScreen = (props) => {
       );
     }
     props.navigation.goBack();
-  }, [dispatch, prodId, name, description, imageUrl, price]);
+  }, [dispatch, prodId, name, description, imageUrl, price, nameIsValid]);
 
   useEffect(() => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
+
+  const nameChangeHandler = (text) => {
+    if (text.trim().length === 0) {
+      setNameIsValid(false);
+    } else {
+      setNameIsValid(true);
+    }
+    setName(text);
+  };
 
   return (
     <ScrollView>
@@ -57,8 +76,12 @@ const EditProductScreen = (props) => {
           <TextInput
             style={styles.input}
             value={name}
-            onChangeText={(text) => setName(text)}
+            onChangeText={nameChangeHandler}
+            autoCapitalize="words"
+            autoCorrect
+            auto
           />
+          {!nameIsValid && <Text>Please enter a valid product name.</Text>}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image URL</Text>
@@ -76,6 +99,7 @@ const EditProductScreen = (props) => {
               style={styles.input}
               value={price}
               onChangeText={(text) => setPrice(text)}
+              keyboardType="decimal-pad"
             />
           </View>
         )}
