@@ -22,7 +22,7 @@ const UserProductsScreen = (props) => {
       renderItem={(itemData) => (
         <ProductItem
           image={itemData.item.imageUrl}
-          title={itemData.item.title}
+          title={itemData.item.name}
           price={itemData.item.price}
           onSelect={() => {}}
         >
