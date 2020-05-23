@@ -34,7 +34,7 @@ const ProductItem = ({
             </View>
 
             <View style={styles.details}>
-              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.name}>{title}</Text>
               <Text style={styles.price}>${price.toFixed(2)}</Text>
             </View>
 
