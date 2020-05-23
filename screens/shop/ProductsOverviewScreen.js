@@ -25,17 +25,17 @@ const ProductOverviewScreen = (props) => {
       renderItem={(itemData) => (
         <ProductItem
           image={itemData.item.imageUrl}
-          title={itemData.item.title}
+          title={itemData.item.name}
           price={itemData.item.price}
           onSelect={() => {
-            selectItemHandler(itemData.item.id, itemData.item.title);
+            selectItemHandler(itemData.item.id, itemData.item.name);
           }}
         >
           <Button
             color={Colors.primary}
             title="View Details"
             onPress={() => {
-              selectItemHandler(itemData.item.id, itemData.item.title);
+              selectItemHandler(itemData.item.id, itemData.item.name);
             }}
           />
           <Button
