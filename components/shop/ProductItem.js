@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     height: '17%',
     padding: 5,
   },
-  title: {
+  name: {
     fontFamily: 'open-sans-bold',
     fontSize: 18,
     marginVertical: 2,
