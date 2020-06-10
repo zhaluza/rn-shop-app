@@ -24,7 +24,7 @@ export default (state = initialState, action) => {
 
     case CREATE_PRODUCT:
       const newProduct = new Product(
-        action.productId.id,
+        action.productData.id,
         'u1',
         action.productData.name,
         action.productData.imageUrl,
