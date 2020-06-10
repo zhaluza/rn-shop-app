@@ -40,7 +40,15 @@ export const fetchProducts = () => {
 };
 
 export const deleteProduct = (productId) => {
-  return { type: DELETE_PRODUCT, pid: productId };
+  return async (dispatch) => {
+    await fetch(
+      `https://rn-shopping-app-af32b.firebaseio.com/products/${id}.json`,
+      {
+        method: 'DELETE',
+      }
+    );
+    dispatch({ type: DELETE_PRODUCT, pid: productId });
+  };
 };
 
 export const createProduct = (name, description, imageUrl, price) => {
@@ -78,13 +86,29 @@ export const createProduct = (name, description, imageUrl, price) => {
 };
 
 export const updateProduct = (id, name, description, imageUrl) => {
-  return {
-    type: UPDATE_PRODUCT,
-    pid: id,
-    productData: {
-      name,
-      description,
-      imageUrl,
-    },
+  return async (dispatch) => {
+    await fetch(
+      `https://rn-shopping-app-af32b.firebaseio.com/products/${id}.json`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          description,
+          imageUrl,
+        }),
+      }
+    );
+    dispatch({
+      type: UPDATE_PRODUCT,
+      pid: id,
+      productData: {
+        name,
+        description,
+        imageUrl,
+      },
+    });
   };
 };
