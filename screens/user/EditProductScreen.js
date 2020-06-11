@@ -71,6 +71,10 @@ const EditProductScreen = (props) => {
     formIsValid: editedProduct ? true : false,
   });
 
+  useEffect(() => {
+    Alert.alert('An error occurred', error, [{ text: 'OK' }]);
+  }, [error]);
+
   const submitHandler = useCallback(async () => {
     // cancel submit if the product name isn't valid
     if (!formState.formIsValid) {
@@ -103,11 +107,11 @@ const EditProductScreen = (props) => {
           )
         );
       }
+      props.navigation.goBack();
     } catch (err) {
       setError(err);
     }
     setIsLoading(false);
-    props.navigation.goBack();
   }, [dispatch, prodId, formState]);
 
   useEffect(() => {
