@@ -41,12 +41,15 @@ export const fetchProducts = () => {
 
 export const deleteProduct = (productId) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://rn-shopping-app-af32b.firebaseio.com/products/${id}.json`,
       {
         method: 'DELETE',
       }
     );
+    if (!response.ok) {
+      throw new Error('Error deleting product');
+    }
     dispatch({ type: DELETE_PRODUCT, pid: productId });
   };
 };
@@ -87,7 +90,7 @@ export const createProduct = (name, description, imageUrl, price) => {
 
 export const updateProduct = (id, name, description, imageUrl) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://rn-shopping-app-af32b.firebaseio.com/products/${id}.json`,
       {
         method: 'PATCH',
@@ -101,6 +104,9 @@ export const updateProduct = (id, name, description, imageUrl) => {
         }),
       }
     );
+    if (!response.ok) {
+      throw new Error('Error updating product');
+    }
     dispatch({
       type: UPDATE_PRODUCT,
       pid: id,
