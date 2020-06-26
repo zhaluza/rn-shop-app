@@ -18,6 +18,7 @@ export const fetchOrders = () => {
 
       const resData = await response.json();
       const loadedOrders = [];
+
       for (const key in resData) {
         loadedOrders.push(
           new Order(
@@ -28,7 +29,7 @@ export const fetchOrders = () => {
           )
         );
       }
-      dispatch({ type: SET_ORDERS, orders: [] });
+      dispatch({ type: SET_ORDERS, orders: loadedOrders });
     } catch (err) {
       throw err;
     }
@@ -63,7 +64,7 @@ export const addOrder = (cartItems, total) => {
       orderData: {
         id: resData.name,
         items: cartItems,
-        amount: total,
+        total: total,
         date: date,
       },
     });
