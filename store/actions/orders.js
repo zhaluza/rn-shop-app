@@ -1,4 +1,39 @@
+import Order from '../../models/order';
+
 export const ADD_ORDER = 'ADD_ORDER';
+export const SET_ORDERS = 'SET_ORDERS';
+
+export const fetchOrders = () => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(
+        'https://rn-shopping-app-af32b.firebaseio.com/orders/u1.json'
+      );
+
+      if (!response.ok) {
+        throw new Error(
+          'Something went wrong with the response from the server!'
+        );
+      }
+
+      const resData = await response.json();
+      const loadedOrders = [];
+      for (const key in resData) {
+        loadedOrders.push(
+          new Order(
+            key,
+            resData[key].cartItems,
+            resData[key].total,
+            new Date(resData[key].date)
+          )
+        );
+      }
+      dispatch({ type: SET_ORDERS, orders: [] });
+    } catch (err) {
+      throw err;
+    }
+  };
+};
 
 export const addOrder = (cartItems, total) => {
   return async (dispatch) => {
