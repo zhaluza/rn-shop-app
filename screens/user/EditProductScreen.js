@@ -31,10 +31,7 @@ const formReducer = (state, action) => {
     };
     let updatedFormIsValid = true;
     for (const key in updatedValidities) {
-      if (updatedValidities[key] === false) {
-        updatedFormIsValid = false;
-        break;
-      }
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
     }
     return {
       formIsValid: updatedFormIsValid,
@@ -59,20 +56,23 @@ const EditProductScreen = (props) => {
     inputValues: {
       name: editedProduct ? editedProduct.name : '',
       imageUrl: editedProduct ? editedProduct.imageUrl : '',
-      price: '',
       description: editedProduct ? editedProduct.description : '',
+      price: '',
     },
     inputValidities: {
       name: editedProduct ? true : false,
       imageUrl: editedProduct ? true : false,
-      price: editedProduct ? true : false,
       description: editedProduct ? true : false,
+      price: editedProduct ? true : false,
     },
     formIsValid: editedProduct ? true : false,
   });
 
   useEffect(() => {
-    Alert.alert('An error occurred', error, [{ text: 'OK' }]);
+    if (error) {
+      Alert.alert('An error occurred', error, [{ text: 'OK' }]);
+      console.log(error);
+    }
   }, [error]);
 
   const submitHandler = useCallback(async () => {
@@ -88,7 +88,7 @@ const EditProductScreen = (props) => {
     // if we're editing an existing product
     try {
       if (editedProduct) {
-        dispatch(
+        await dispatch(
           productsActions.updateProduct(
             prodId,
             formState.inputValues.name,
@@ -109,7 +109,7 @@ const EditProductScreen = (props) => {
       }
       props.navigation.goBack();
     } catch (err) {
-      setError(err);
+      setError(err.message);
     }
     setIsLoading(false);
   }, [dispatch, prodId, formState]);
