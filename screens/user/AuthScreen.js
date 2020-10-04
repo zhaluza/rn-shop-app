@@ -1,12 +1,44 @@
-import React from 'react';
+import React, { useReducer, useCallback } from 'react';
 import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useDispatch } from 'react-redux';
+import { formReducer, FORM_INPUT_UPDATE } from './utils/formReducer';
 
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
+import * as authActions from '../../store/actions/auth';
 
 const AuthScreen = () => {
+  const dispatch = useDispatch();
+
+  const [formState, dispatchFormState] = useReducer(formReducer, {
+    inputValues: {
+      email: '',
+      password: '',
+    },
+    inputValidity: {
+      email: false,
+      password: false,
+    },
+  });
+
+  const signUpHandler = () => {
+    dispatch(authActions.signup(formState.inputValues.email, formState.inputValues.password));
+  };
+
+  const inputChangeHandler = useCallback(
+    (inputType, inputValue, inputValidity) => {
+      dispatchFormState({
+        type: FORM_INPUT_UPDATE,
+        value: inputValue,
+        isValid: inputValidity,
+        input: inputType,
+      });
+    },
+    [dispatchFormState]
+  );
+
   return (
     <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
       <LinearGradient colors={['#dff9fb', '#c7ecee']} style={styles.gradient}>
@@ -19,28 +51,28 @@ const AuthScreen = () => {
               required
               email
               autoCapitalize="none"
-              errorMessage="Please enter a valid email address"
-              onInputChange={() => {}}
+              errorText="Please enter a valid email address"
+              onInputChange={inputChangeHandler}
               initialValue=""
             />
             <Input
               id="password"
-              label="password"
+              label="Password"
               keyboardType="default"
               secureTextEntry
               required
               minLength={5}
               autoCapitalize="none"
-              errorMessage="Please enter a valid password"
-              onInputChange={() => {}}
+              errorText="Please enter a valid password"
+              onInputChange={inputChangeHandler}
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button title="Log in" color={Colors.primary} onPress={() => {}} />
+              <Button title="Sign Up" color={Colors.primary} onPress={signUpHandler} />
             </View>
 
             <View style={styles.buttonContainer}>
-              <Button title="Switch to Signup" color={Colors.accent} onPress={() => {}} />
+              <Button title="Switch to Login" color={Colors.accent} onPress={() => {}} />
             </View>
           </ScrollView>
         </Card>
