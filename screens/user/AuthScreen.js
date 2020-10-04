@@ -1,24 +1,14 @@
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  Button,
-} from 'react-native';
+import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Button } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 import Input from '../../components/UI/Input';
 import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
 
-const AuthScreen = (props) => {
+const AuthScreen = () => {
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={50}
-      style={styles.screen}
-    >
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
       <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
         <Card style={styles.authContainer}>
           <ScrollView>
@@ -46,19 +36,11 @@ const AuthScreen = (props) => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button
-                title="Log in"
-                color={Colors.primary}
-                onPress={() => {}}
-              />
+              <Button title="Log in" color={Colors.primary} onPress={() => {}} />
             </View>
 
             <View style={styles.buttonContainer}>
-              <Button
-                title="Switch to Signup"
-                color={Colors.accent}
-                onPress={() => {}}
-              />
+              <Button title="Switch to Signup" color={Colors.accent} onPress={() => {}} />
             </View>
           </ScrollView>
         </Card>
