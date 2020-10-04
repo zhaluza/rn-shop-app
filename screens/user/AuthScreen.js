@@ -9,7 +9,7 @@ import Colors from '../../constants/Colors';
 const AuthScreen = () => {
   return (
     <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
-      <LinearGradient colors={['#ffedff', '#ffe3ff']} style={styles.gradient}>
+      <LinearGradient colors={['#dff9fb', '#c7ecee']} style={styles.gradient}>
         <Card style={styles.authContainer}>
           <ScrollView>
             <Input
