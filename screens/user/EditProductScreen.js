@@ -11,36 +11,12 @@ import {
 
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import { useSelector, useDispatch } from 'react-redux';
+import { formReducer, FORM_INPUT_UPDATE } from './utils/formReducer';
 
 import HeaderButton from '../../components/UI/HeaderButton';
 import * as productsActions from '../../store/actions/products';
 import Input from '../../components/UI/Input';
 import Colors from '../../constants/Colors';
-
-const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE';
-
-const formReducer = (state, action) => {
-  if (action.type === FORM_INPUT_UPDATE) {
-    const updatedValues = {
-      ...state.inputValues,
-      [action.input]: action.value,
-    };
-    const updatedValidities = {
-      ...state.inputValidities,
-      [action.input]: action.isValid,
-    };
-    let updatedFormIsValid = true;
-    for (const key in updatedValidities) {
-      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
-    }
-    return {
-      formIsValid: updatedFormIsValid,
-      inputValidities: updatedValidities,
-      inputValues: updatedValues,
-    };
-  }
-  return state;
-};
 
 const EditProductScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -78,9 +54,7 @@ const EditProductScreen = (props) => {
   const submitHandler = useCallback(async () => {
     // cancel submit if the product name isn't valid
     if (!formState.formIsValid) {
-      Alert.alert('Invalid input', 'Please enter all required info', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('Invalid input', 'Please enter all required info', [{ text: 'OK' }]);
       return;
     }
     setError(null);
@@ -139,11 +113,7 @@ const EditProductScreen = (props) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior="padding"
-      keyboardVerticalOffset={100}
-    >
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding" keyboardVerticalOffset={100}>
       <ScrollView>
         <View style={styles.form}>
           <Input
@@ -205,16 +175,12 @@ const EditProductScreen = (props) => {
 EditProductScreen.navigationOptions = (navData) => {
   const submitFunc = navData.navigation.getParam('submit');
   return {
-    headerTitle: navData.navigation.getParam('productId')
-      ? 'Edit Product'
-      : 'Add Product',
+    headerTitle: navData.navigation.getParam('productId') ? 'Edit Product' : 'Add Product',
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
           title="Save"
-          iconName={
-            Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'
-          }
+          iconName={Platform.OS === 'android' ? 'md-checkmark' : 'ios-checkmark'}
           onPress={submitFunc}
         />
       </HeaderButtons>
