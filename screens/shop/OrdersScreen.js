@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  FlatList,
-  Platform,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
+import { View, FlatList, Platform, ActivityIndicator, StyleSheet } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
 import HeaderButton from '../../components/UI/HeaderButton';
+import NotFound from '../../components/UI/NotFound';
 import OrderItem from '../../components/shop/OrderItem';
 import * as ordersActions from '../../store/actions/orders';
 import Colors from '../../constants/Colors';
@@ -32,6 +27,10 @@ const OrdersScreen = (props) => {
         <ActivityIndicator size="large" color={Colors.primary} />
       </View>
     );
+  }
+
+  if (!orders.length) {
+    return <NotFound text={'No orders found. Check the shop and add some!'} />;
   }
 
   return (
