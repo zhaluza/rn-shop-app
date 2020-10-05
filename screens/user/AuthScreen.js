@@ -62,7 +62,7 @@ const AuthScreen = (props) => {
     } else {
       Alert.alert(
         'Invalid Input',
-        'Please enter a valid email address and a password with 5 or more characters',
+        'Please enter a valid email address and a password with 6 or more characters',
         [{ text: 'OK' }]
       );
     }
@@ -102,7 +102,7 @@ const AuthScreen = (props) => {
               keyboardType="default"
               secureTextEntry
               required
-              minLength={5}
+              minLength={6}
               autoCapitalize="none"
               errorText="Please enter a valid password"
               onInputChange={inputChangeHandler}
