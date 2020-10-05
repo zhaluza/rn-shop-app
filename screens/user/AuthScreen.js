@@ -1,5 +1,12 @@
-import React, { useReducer, useCallback } from 'react';
-import { ScrollView, StyleSheet, View, KeyboardAvoidingView, Button } from 'react-native';
+import React, { useState, useReducer, useCallback } from 'react';
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  Button,
+  ActivityIndicator,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
 import { formReducer, FORM_INPUT_UPDATE } from './utils/formReducer';
@@ -10,6 +17,8 @@ import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 
 const AuthScreen = () => {
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -23,8 +32,16 @@ const AuthScreen = () => {
     },
   });
 
-  const signUpHandler = () => {
-    dispatch(authActions.signup(formState.inputValues.email, formState.inputValues.password));
+  const authHandler = async () => {
+    let action;
+    if (isSignUp) {
+      action = authActions.signup(formState.inputValues.email, formState.inputValues.password);
+    } else {
+      action = authActions.login(formState.inputValues.email, formState.inputValues.password);
+    }
+    setIsLoading(true);
+    await dispatch(action);
+    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(
@@ -43,7 +60,7 @@ const AuthScreen = () => {
     <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={50} style={styles.screen}>
       <LinearGradient colors={['#dff9fb', '#c7ecee']} style={styles.gradient}>
         <Card style={styles.authContainer}>
-          <ScrollView>
+          <ScrollView keyboardShouldPersistTaps="always">
             <Input
               id="email"
               label="Email"
@@ -68,11 +85,25 @@ const AuthScreen = () => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button title="Sign Up" color={Colors.primary} onPress={signUpHandler} />
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Button
+                  title={isSignUp ? 'Sign Up' : 'Log In'}
+                  color={Colors.primary}
+                  onPress={authHandler}
+                />
+              )}
             </View>
 
             <View style={styles.buttonContainer}>
-              <Button title="Switch to Login" color={Colors.accent} onPress={() => {}} />
+              <Button
+                title={`Switch to ${isSignUp ? 'Login' : 'Signup'}`}
+                color={Colors.accent}
+                onPress={() => {
+                  setIsSignUp((prevState) => !prevState);
+                }}
+              />
             </View>
           </ScrollView>
         </Card>
