@@ -31,10 +31,11 @@ export const signup = (email, password) => {
           "We've blocked all requests from this device due to unusual activity. Please try again later";
       }
       throw new Error(errorMessage);
+    } else {
+      const resData = await response.json();
+      console.log({ resData });
+      dispatch({ type: SIGNUP });
     }
-    const resData = await response.json();
-    console.log({ resData });
-    dispatch({ type: SIGNUP });
   };
 };
 
@@ -63,9 +64,10 @@ export const login = (email, password) => {
         errorMessage = 'This password is not valid';
       }
       throw new Error(errorMessage);
+    } else {
+      const resData = await response.json();
+      console.log({ resData });
+      dispatch({ type: LOGIN });
     }
-    const resData = await response.json();
-    console.log({ resData });
-    dispatch({ type: LOGIN });
   };
 };
