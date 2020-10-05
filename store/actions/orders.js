@@ -4,16 +4,15 @@ export const ADD_ORDER = 'ADD_ORDER';
 export const SET_ORDERS = 'SET_ORDERS';
 
 export const fetchOrders = () => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const userId = getState().auth.userId;
     try {
       const response = await fetch(
-        'https://rn-shopping-app-af32b.firebaseio.com/orders/u1.json'
+        `https://rn-shopping-app-af32b.firebaseio.com/orders/${userId}.json`
       );
 
       if (!response.ok) {
-        throw new Error(
-          'Something went wrong with the response from the server!'
-        );
+        throw new Error('Something went wrong with the response from the server!');
       }
 
       const resData = await response.json();
@@ -21,12 +20,7 @@ export const fetchOrders = () => {
 
       for (const key in resData) {
         loadedOrders.push(
-          new Order(
-            key,
-            resData[key].cartItems,
-            resData[key].total,
-            new Date(resData[key].date)
-          )
+          new Order(key, resData[key].cartItems, resData[key].total, new Date(resData[key].date))
         );
       }
       dispatch({ type: SET_ORDERS, orders: loadedOrders });
@@ -37,10 +31,12 @@ export const fetchOrders = () => {
 };
 
 export const addOrder = (cartItems, total) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
+    const userId = getState().auth.userId;
     const date = new Date();
     const response = await fetch(
-      'https://rn-shopping-app-af32b.firebaseio.com/orders/u1.json',
+      `https://rn-shopping-app-af32b.firebaseio.com/orders/${userId}.json?auth=${token}`,
       {
         method: 'POST',
         headers: {
