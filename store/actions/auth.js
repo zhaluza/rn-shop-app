@@ -20,7 +20,17 @@ export const signup = (email, password) => {
       }
     );
     if (!response.ok) {
-      throw new Error('Something went wrong with signup');
+      const errorResponseData = await response.json();
+      let errorMessage = errorResponseData.error.message;
+      if (errorMessage === 'EMAIL_EXISTS') {
+        errorMessage = 'This email already exists';
+      } else if (errorMessage === 'OPERATION_NOT_ALLOWED') {
+        errorMessage = 'Password sign-in is disabled';
+      } else if (errorMessage === 'TOO_MANY_ATTEMPTS_TRY_LATER') {
+        errorMessage =
+          "We've blocked all requests from this device due to unusual activity. Please try again later";
+      }
+      throw new Error(errorMessage);
     }
     const resData = await response.json();
     console.log({ resData });
@@ -45,7 +55,14 @@ export const login = (email, password) => {
       }
     );
     if (!response.ok) {
-      throw new Error('Something went wrong with logging in');
+      const errorResponseData = await response.json();
+      let errorMessage = errorResponseData.error.message;
+      if (errorMessage === 'EMAIL_NOT_FOUND') {
+        errorMessage = 'This email could not be found';
+      } else if (errorMessage === 'INVALID_PASSWORD') {
+        errorMessage = 'This password is not valid';
+      }
+      throw new Error(errorMessage);
     }
     const resData = await response.json();
     console.log({ resData });

@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback } from 'react';
+import React, { useState, useReducer, useCallback, useEffect } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Button,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useDispatch } from 'react-redux';
@@ -19,6 +20,7 @@ import * as authActions from '../../store/actions/auth';
 const AuthScreen = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -30,18 +32,39 @@ const AuthScreen = () => {
       email: false,
       password: false,
     },
+    formIsValid: false,
   });
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occurred!', error, [{ text: 'OK' }]);
+    }
+  }, [error]);
 
   const authHandler = async () => {
     let action;
-    if (isSignUp) {
-      action = authActions.signup(formState.inputValues.email, formState.inputValues.password);
+    if (formState.formIsValid) {
+      if (isSignUp) {
+        action = authActions.signup(formState.inputValues.email, formState.inputValues.password);
+      } else {
+        action = authActions.login(formState.inputValues.email, formState.inputValues.password);
+      }
+      setError(null);
+      setIsLoading(true);
+      try {
+        await dispatch(action);
+      } catch (err) {
+        console.log({ err });
+        setError(err.message);
+      }
+      setIsLoading(false);
     } else {
-      action = authActions.login(formState.inputValues.email, formState.inputValues.password);
+      Alert.alert(
+        'Invalid Input',
+        'Please enter a valid email address and a password with 5 or more characters',
+        [{ text: 'OK' }]
+      );
     }
-    setIsLoading(true);
-    await dispatch(action);
-    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(
