@@ -29,7 +29,7 @@ const StartupScreen = (props) => {
     tryLogin();
   }, [dispatch]);
   return (
-    <View>
+    <View style={styles.screen}>
       <ActivityIndicator size="large" color={Colors.primary} />
     </View>
   );
