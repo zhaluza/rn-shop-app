@@ -1,15 +1,9 @@
-import PRODUCTS from '../../data/dummy-data';
-import {
-  DELETE_PRODUCT,
-  CREATE_PRODUCT,
-  UPDATE_PRODUCT,
-  SET_PRODUCTS,
-} from '../actions/products';
+import { DELETE_PRODUCT, CREATE_PRODUCT, UPDATE_PRODUCT, SET_PRODUCTS } from '../actions/products';
 import Product from '../../models/product';
 
 const initialState = {
-  availableProducts: PRODUCTS,
-  userProducts: PRODUCTS.filter((product) => product.ownerId === 'u1'),
+  availableProducts: [],
+  userProducts: [],
 };
 
 export default (state = initialState, action) => {
@@ -17,15 +11,13 @@ export default (state = initialState, action) => {
     case SET_PRODUCTS:
       return {
         availableProducts: action.products,
-        userProducts: action.products.filter(
-          (product) => product.ownerId === 'u1'
-        ),
+        userProducts: action.userProducts,
       };
 
     case CREATE_PRODUCT:
       const newProduct = new Product(
         action.productData.id,
-        'u1',
+        action.productData.ownerId,
         action.productData.name,
         action.productData.imageUrl,
         action.productData.description,
@@ -38,9 +30,7 @@ export default (state = initialState, action) => {
       };
 
     case UPDATE_PRODUCT:
-      const productIndex = state.userProducts.findIndex(
-        (prod) => prod.id === action.pid
-      );
+      const productIndex = state.userProducts.findIndex((prod) => prod.id === action.pid);
       const updatedProduct = new Product(
         action.pid,
         state.userProducts[productIndex].ownerId,
@@ -65,12 +55,8 @@ export default (state = initialState, action) => {
     case DELETE_PRODUCT:
       return {
         ...state,
-        availableProducts: state.availableProducts.filter(
-          (product) => product.id !== action.pid
-        ),
-        userProducts: state.userProducts.filter(
-          (product) => product.id !== action.pid
-        ),
+        availableProducts: state.availableProducts.filter((product) => product.id !== action.pid),
+        userProducts: state.userProducts.filter((product) => product.id !== action.pid),
       };
   }
   return state;
