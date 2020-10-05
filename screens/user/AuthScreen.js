@@ -17,7 +17,7 @@ import Card from '../../components/UI/Card';
 import Colors from '../../constants/Colors';
 import * as authActions from '../../store/actions/auth';
 
-const AuthScreen = () => {
+const AuthScreen = (props) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -53,11 +53,12 @@ const AuthScreen = () => {
       setIsLoading(true);
       try {
         await dispatch(action);
+        props.navigation.navigate('Shop');
       } catch (err) {
         console.log({ err });
         setError(err.message);
+        setIsLoading(false);
       }
-      setIsLoading(false);
     } else {
       Alert.alert(
         'Invalid Input',
