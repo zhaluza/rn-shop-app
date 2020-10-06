@@ -68,7 +68,6 @@ export const signup = (email, password) => {
       throw new Error(errorMessage);
     } else {
       const resData = await response.json();
-      console.log({ resData });
       dispatch(authenticate(resData.localId, resData.idToken, Number(res.Data.expiresIn) * 1000));
       const expirationDate = new Date().getTime() + Number(resData.expiresIn) * 1000;
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
@@ -103,7 +102,6 @@ export const login = (email, password) => {
       throw new Error(errorMessage);
     } else {
       const resData = await response.json();
-      console.log({ resData });
       dispatch(authenticate(resData.localId, resData.idToken, Number(resData.expiresIn) * 1000));
       const expirationDate = new Date(new Date().getTime() + Number(resData.expiresIn) * 1000);
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
