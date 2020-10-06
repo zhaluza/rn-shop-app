@@ -5,18 +5,38 @@ export const LOGOUT = 'LOGOUT';
 
 const apiKey = 'AIzaSyBr32KBLwIAAcBFOMGe1NgHq2VWyjOmC6k';
 
-export const authenticate = (userId, token) => {
-  return {
-    type: AUTHENTICATE,
-    userId,
-    token,
+export const authenticate = (userId, token, expirationTime) => {
+  return (dispatch) => {
+    dispatch(setLogoutTimer(expirationTime));
+    dispatch({
+      type: AUTHENTICATE,
+      userId,
+      token,
+    });
   };
 };
 
 export const logout = () => {
+  clearLogoutTimer();
   resetStorage();
   return { type: LOGOUT };
 };
+
+let timer;
+
+const setLogoutTimer = (expirationTime) => {
+  return (dispatch) => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  };
+};
+
+function clearLogoutTimer() {
+  if (timer) {
+    clearTimeout(timer);
+  }
+}
 
 export const signup = (email, password) => {
   return async (dispatch) => {
@@ -49,7 +69,7 @@ export const signup = (email, password) => {
     } else {
       const resData = await response.json();
       console.log({ resData });
-      dispatch(authenticate(resData.localId, resData.idToken));
+      dispatch(authenticate(resData.localId, resData.idToken, Number(res.Data.expiresIn) * 1000));
       const expirationDate = new Date().getTime() + Number(resData.expiresIn) * 1000;
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     }
@@ -84,9 +104,8 @@ export const login = (email, password) => {
     } else {
       const resData = await response.json();
       console.log({ resData });
-      dispatch(authenticate(resData.localId, resData.idToken));
+      dispatch(authenticate(resData.localId, resData.idToken, Number(resData.expiresIn) * 1000));
       const expirationDate = new Date(new Date().getTime() + Number(resData.expiresIn) * 1000);
-      console.log({ expirationDate });
       saveDataToStorage(resData.idToken, resData.localId, expirationDate);
     }
   };
@@ -97,6 +116,6 @@ function saveDataToStorage(token, userId, expirationDate) {
   AsyncStorage.setItem('userData', JSON.stringify(userData));
 }
 
-function resetStorage() {
-  AsyncStorage.setItem('userData', JSON.stringify({}));
+async function resetStorage() {
+  await AsyncStorage.removeItem('userData');
 }
